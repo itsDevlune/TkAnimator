@@ -19,12 +19,9 @@ If you encounter any issues, please report them. Contributions are welcome!
 
 ## 📦 Installation
 
-- Copy `tk_animations.py` into your project folder  
-- Or (if published): `pip install tk-animations`
+Simply copy the `tk_animations.py` file into your project folder.
 
-## 🚀 Usage
-
-### Basic Setup
+## 🚀 Basic Usage
 
 ```python
 from tkinter import *
@@ -32,87 +29,132 @@ from tk_animations import TkAnimations
 
 root = Tk()
 animations = TkAnimations()
-```
 
-### Applying Animations
-
-```python
+# Apply to any widget
 button = Button(root, text="Click me")
 button.pack()
 
 animations.animate_fade_in(button)
-
-label = Label(root, text="Hello")
-label.pack()
-
-animations.animate_bounce(label)
 ```
 
-## 🧩 Available Methods
+## 🧩 Complete Method Reference
 
-### 🔹 Basic Animations
+### 🔹 Fade Effects
 
-- `animate_fade_in(widget, duration=1000, callback=None)`  
-    Fades in a widget from transparent.
+```python
+animate_fade_in(
+    widget: tk.Widget, 
+    duration: int = 1000, 
+    callback: Optional[Callable] = None
+)
 
-- `animate_fade_out(widget, duration=1000, callback=None)`  
-    Fades out a widget to transparent.
+animate_fade_out(
+    widget: tk.Widget, 
+    duration: int = 1000, 
+    callback: Optional[Callable] = None
+)
+```
 
 ### 🔹 Movement Animations
 
-- `animate_slide(widget, direction='right', distance=100, duration=1000)`  
-    Slides a widget in a given direction (`left`, `right`, `up`, `down`).
+```python
+animate_slide(
+    widget: tk.Widget, 
+    direction: str = 'right',  # 'left'/'right'/'up'/'down'
+    distance: int = 100,
+    duration: int = 1000,
+    callback: Optional[Callable] = None
+)
 
-- `animate_bounce(widget, height=30, bounces=3, duration=1500)`  
-    Bouncing motion effect.
+animate_bounce(
+    widget: tk.Widget,
+    height: int = 30,  # Max bounce height
+    bounces: int = 3,
+    duration: int = 1500,
+    callback: Optional[Callable] = None
+)
 
-- `animate_hover(widget, hover_lift=10, duration=300)`  
-    Hover "lift" animation.
+animate_hover(
+    widget: tk.Widget,
+    hover_lift: int = 10,  # Lift distance
+    duration: int = 300,
+    callback: Optional[Callable] = None
+)
+```
 
-### 🔹 Transformation Animations
+### 🔹 Transformation Effects
 
-- `animate_pulse(widget, scale_factor=1.2, pulses=3, duration=1000)`  
-    Scale up/down to simulate pulsing.
+```python
+animate_pulse(
+    widget: tk.Widget,
+    scale_factor: float = 1.2,  # Max scale
+    pulses: int = 3,
+    duration: int = 1000,
+    callback: Optional[Callable] = None
+)
 
-- `animate_wiggle(widget, angle=10.0, wiggles=5, duration=1000)`  
-    Wiggle with simulated rotation.
+animate_wiggle(
+    widget: tk.Widget,
+    angle: float = 10.0,  # Max rotation
+    wiggles: int = 5,
+    duration: int = 1000,
+    callback: Optional[Callable] = None
+)
 
-- `animate_expand_shrink(widget, expand_factor=1.5, duration=1000)`  
-    Expand and shrink widget.
+animate_expand_shrink(
+    widget: tk.Widget,
+    expand_factor: float = 1.5,
+    duration: int = 1000,
+    shrink_back: bool = True,  # Return to original size
+    callback: Optional[Callable] = None
+)
+```
 
 ### 🔹 Visual Effects
 
-- `animate_color_transition(widget, start_color, end_color, property_name='bg', duration=1000)`  
-    Smoothly transitions color (background or foreground).
-
-- `animate_shake(widget, intensity=10, shakes=5, duration=800)`  
-    Shaking effect (left-right).
-
-## 🧪 Example
-
 ```python
-from tkinter import *
-from tk_animations import TkAnimations
+animate_color_transition(
+    widget: tk.Widget,
+    start_color: str = '#FFFFFF',
+    end_color: str = '#3498db',
+    duration: int = 1000,
+    property_name: str = 'bg',  # 'fg' for text color
+    callback: Optional[Callable] = None
+)
 
-def demo():
-        root = Tk()
-        btn = Button(root, text="Animate Me!")
-        btn.pack(pady=20)
-        
-        anim = TkAnimations()
-        anim.animate_pulse(btn)
-        
-        root.mainloop()
-
-demo()
+animate_shake(
+    widget: tk.Widget,
+    intensity: int = 10,  # Shake strength
+    shakes: int = 5,
+    duration: int = 800,
+    callback: Optional[Callable] = None
+)
 ```
 
-## 📝 Notes
+## 🧪 Demo Application
 
-- Works best with widgets using the `place()` geometry manager.  
-- `duration` values are in milliseconds (1000ms = 1s).  
-- Optional `callback` functions can run after the animation completes.  
+The library includes a ready-to-run demo:
+
+```python
+if __name__ == "__main__":
+    demo_app()  # Shows all animations
+```
+
+## 📝 Important Notes
+
+### Geometry Managers:
+- Works best with `place()` manager for precise control.
+
+### Performance:
+- Complex animations may affect performance on older hardware.
+- Alpha effects may not work on all platforms.
+
+### Duration:
+- All durations are in milliseconds (1000ms = 1s).
+
+### Callbacks:
+- Optional callback functions execute after animation completes.
 
 ## 🪪 License
 
-MIT License — Free to use, modify, and distribute.
+MIT License — Free to use, modify and distribute.
