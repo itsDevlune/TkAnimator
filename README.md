@@ -158,4 +158,4 @@ if __name__ == "__main__":
 
 ## License
 
-MIT License — Free to use, modify and distribute.
+MIT License Free to use modify and distribute.
