@@ -3,7 +3,7 @@
 ⚠️ **WARNING**: This library is still under development and may contain bugs.  
 If you encounter any issues, please report them. Contributions are welcome!
 
-**TkAnimations** is a collection of reusable animation effects for Tkinter widgets, designed to bring life and motion to your desktop apps — all from a single, lightweight Python file.
+**TkAnimations** is a collection of reusable animation effects for Tkinter widgets, designed to bring life and motion to your desktop apps all from a single, lightweight Python file.
 
 ## ✨ Features
 
