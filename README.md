@@ -20,7 +20,7 @@ If you encounter any issues, please report them. Contributions are welcome!
 ## 📦 Installation
 
 Simply copy the `tk_animations.py` file into your project folder.
-or `https://pypi.org/project/tk-animations/0.1.0/`
+-or `pip install tk-animations`
 
 ## 🚀 Basic Usage
 
