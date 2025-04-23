@@ -5,7 +5,7 @@ If you encounter any issues, please report them. Contributions are welcome!
 
 **TkAnimations** is a collection of reusable animation effects for Tkinter widgets, designed to bring life and motion to your desktop apps all from a single, lightweight Python file.
 
-## ✨ Features
+## Features
 
 - Fade in/out effects  
 - Slide animations in all directions  
@@ -17,12 +17,12 @@ If you encounter any issues, please report them. Contributions are welcome!
 - Shake effects  
 - Hover animations  
 
-## 📦 Installation
+## Installation
 
 Simply copy the `tk_animations.py` file into your project folder.
 -or `pip install tk-animations`
 
-## 🚀 Basic Usage
+## Basic Usage
 
 ```python
 from tkinter import *
@@ -38,9 +38,9 @@ button.pack()
 animations.animate_fade_in(button)
 ```
 
-## 🧩 Complete Method Reference
+## Complete Method Reference
 
-### 🔹 Fade Effects
+### Fade Effects
 
 ```python
 animate_fade_in(
@@ -56,7 +56,7 @@ animate_fade_out(
 )
 ```
 
-### 🔹 Movement Animations
+### Movement Animations
 
 ```python
 animate_slide(
@@ -83,7 +83,7 @@ animate_hover(
 )
 ```
 
-### 🔹 Transformation Effects
+### Transformation Effects
 
 ```python
 animate_pulse(
@@ -111,7 +111,7 @@ animate_expand_shrink(
 )
 ```
 
-### 🔹 Visual Effects
+### Visual Effects
 
 ```python
 animate_color_transition(
@@ -132,7 +132,7 @@ animate_shake(
 )
 ```
 
-## 🧪 Demo Application
+## Demo Application
 
 The library includes a ready-to-run demo:
 
@@ -156,6 +156,6 @@ if __name__ == "__main__":
 ### Callbacks:
 - Optional callback functions execute after animation completes.
 
-## 🪪 License
+## License
 
 MIT License — Free to use, modify and distribute.
