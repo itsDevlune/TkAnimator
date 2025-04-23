@@ -24,11 +24,11 @@ class TkAnimations:
             duration: Animation duration in milliseconds
             callback: Optional function to call when animation completes
         """
-        # Save the original alpha value
+        
         if not hasattr(widget, '_original_alpha'):
             widget._original_alpha = 1.0
         
-        # Set initial transparency
+        
         widget.attributes('-alpha', 0.0) if hasattr(widget, 'attributes') else None
         
         steps = 20
@@ -41,7 +41,7 @@ class TkAnimations:
                 if hasattr(widget, 'attributes'):
                     widget.attributes('-alpha', alpha)
                 elif hasattr(widget, 'master') and hasattr(widget.master, 'attributes'):
-                    # Try to apply to parent if widget doesn't support attributes
+                    
                     widget.master.attributes('-alpha', alpha)
                 widget.after(step_time, lambda: step(count + 1))
             elif callback:
@@ -59,7 +59,7 @@ class TkAnimations:
             duration: Animation duration in milliseconds
             callback: Optional function to call when animation completes
         """
-        # Save the original alpha value
+        
         if not hasattr(widget, '_original_alpha'):
             if hasattr(widget, 'attributes'):
                 try:
@@ -77,7 +77,7 @@ class TkAnimations:
         def step(count):
             if count <= steps:
                 alpha = current_alpha - (step_alpha * count)
-                alpha = max(0.0, alpha)  # Ensure alpha doesn't go negative
+                alpha = max(0.0, alpha) 
                 if hasattr(widget, 'attributes'):
                     widget.attributes('-alpha', alpha)
                 elif hasattr(widget, 'master') and hasattr(widget.master, 'attributes'):
@@ -104,10 +104,10 @@ class TkAnimations:
         steps = 20
         step_time = duration // steps
         
-        # Get the current position of the widget
+       
         x, y = widget.winfo_x(), widget.winfo_y()
         
-        # Calculate movement per step
+       
         if direction == 'left':
             dx, dy = -distance / steps, 0
         elif direction == 'right':
@@ -151,19 +151,19 @@ class TkAnimations:
         
         def step(count):
             if count <= steps:
-                # Calculate the current y position using a sine wave with decreasing amplitude
+               
                 progress = count / steps
                 decay = 1 - (progress * 0.8)  # Decay factor
                 cycle = progress * bounces * 2 * math.pi
                 offset = math.sin(cycle) * height * decay
                 
-                # Apply the new position
+               
                 widget.place(y=original_y - offset)
                 widget.update()
                 
                 widget.after(step_time, lambda: step(count + 1))
             else:
-                # Ensure the widget returns to its original position
+                
                 widget.place(y=original_y)
                 if callback:
                     callback()
@@ -183,7 +183,7 @@ class TkAnimations:
             duration: Total animation duration in milliseconds
             callback: Optional function to call when animation completes
         """
-        # Save original dimensions
+       
         original_width = widget.winfo_width()
         original_height = widget.winfo_height()
         original_x = widget.winfo_x()
@@ -194,26 +194,26 @@ class TkAnimations:
         
         def step(count):
             if count <= steps:
-                # Calculate scaling using a sine wave
+                
                 progress = count / steps
                 cycle = progress * pulses * 2 * math.pi
                 scale = 1 + (math.sin(cycle) * (scale_factor - 1) / 2)
                 
-                # Calculate new dimensions
+                
                 new_width = int(original_width * scale)
                 new_height = int(original_height * scale)
                 
-                # Calculate new position to keep the widget centered
+                
                 new_x = original_x - (new_width - original_width) // 2
                 new_y = original_y - (new_height - original_height) // 2
                 
-                # Apply new dimensions and position
+               
                 widget.place(x=new_x, y=new_y, width=new_width, height=new_height)
                 widget.update()
                 
                 widget.after(step_time, lambda: step(count + 1))
             else:
-                # Restore original dimensions and position
+                
                 widget.place(x=original_x, y=original_y, width=original_width, height=original_height)
                 if callback:
                     callback()
@@ -236,7 +236,6 @@ class TkAnimations:
         steps = 30
         step_time = duration // steps
         
-        # Get the widget's center point
         width = widget.winfo_width()
         height = widget.winfo_height()
         center_x = width / 2
@@ -244,20 +243,17 @@ class TkAnimations:
         
         def step(count):
             if count <= steps:
-                # Calculate rotation using a sine wave
+                
                 progress = count / steps
                 cycle = progress * wiggles * 2 * math.pi
                 current_angle = math.sin(cycle) * angle
                 
-                # For Canvas objects, we can use the rotate method if available
                 if hasattr(widget, 'rotate'):
                     widget.rotate(widget.find_all(), current_angle, center_x, center_y)
                 else:
-                    # For other widgets, we simulate rotation by applying transforms
-                    # Use only for label-like widgets where the text can be rotated
+                   
                     if hasattr(widget, 'config') and 'text' in widget.config():
                         try:
-                            # This is a simplification - true rotation would require more complex transforms
                             widget.config(angle=current_angle)
                         except:
                             pass
@@ -265,7 +261,6 @@ class TkAnimations:
                 widget.update()
                 widget.after(step_time, lambda: step(count + 1))
             else:
-                # Reset any rotation
                 if hasattr(widget, 'rotate'):
                     widget.rotate(widget.find_all(), 0, center_x, center_y)
                 elif hasattr(widget, 'config') and 'text' in widget.config():
@@ -297,7 +292,6 @@ class TkAnimations:
         steps = 30
         step_time = duration // steps
         
-        # Convert hex colors to RGB tuples
         def hex_to_rgb(hex_color):
             hex_color = hex_color.lstrip('#')
             return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
@@ -307,14 +301,11 @@ class TkAnimations:
         
         def step(count):
             if count <= steps:
-                # Calculate interpolated color
                 progress = count / steps
                 current_rgb = tuple(int(start_rgb[i] + (end_rgb[i] - start_rgb[i]) * progress) for i in range(3))
                 
-                # Convert back to hex
                 current_color = f'#{current_rgb[0]:02x}{current_rgb[1]:02x}{current_rgb[2]:02x}'
                 
-                # Apply the color
                 try:
                     if property_name == 'bg':
                         widget.config(bg=current_color)
@@ -323,7 +314,6 @@ class TkAnimations:
                     else:
                         widget.config(**{property_name: current_color})
                 except tk.TclError:
-                    # Some widgets might not support certain properties
                     pass
                 
                 widget.update()
@@ -347,7 +337,6 @@ class TkAnimations:
             shrink_back: Whether to shrink back to original size after expanding
             callback: Optional function to call when animation completes
         """
-        # Save original dimensions
         original_width = widget.winfo_width()
         original_height = widget.winfo_height()
         original_x = widget.winfo_x()
@@ -366,29 +355,23 @@ class TkAnimations:
         def step(count):
             if count <= total_steps:
                 if count <= mid_point:
-                    # Expanding phase
                     progress = count / mid_point
                     scale = 1 + (expand_factor - 1) * progress
                 else:
-                    # Shrinking phase
                     progress = (count - mid_point) / (total_steps - mid_point)
                     scale = expand_factor - (expand_factor - 1) * progress
                 
-                # Calculate new dimensions
                 new_width = int(original_width * scale)
                 new_height = int(original_height * scale)
                 
-                # Calculate new position to keep the widget centered
                 new_x = original_x - (new_width - original_width) // 2
                 new_y = original_y - (new_height - original_height) // 2
                 
-                # Apply new dimensions and position
                 widget.place(x=new_x, y=new_y, width=new_width, height=new_height)
                 widget.update()
                 
                 widget.after(step_time, lambda: step(count + 1))
             else:
-                # Reset to original dimensions if needed
                 widget.place(x=original_x, y=original_y, width=original_width, height=original_height)
                 if callback:
                     callback()
@@ -408,7 +391,6 @@ class TkAnimations:
             duration: Total animation duration in milliseconds
             callback: Optional function to call when animation completes
         """
-        # Get the widget's original position
         original_x = widget.winfo_x()
         original_y = widget.winfo_y()
         
@@ -417,19 +399,16 @@ class TkAnimations:
         
         def step(count):
             if count <= steps:
-                # Calculate displacement using a sine wave with decreasing amplitude
                 progress = count / steps  # 0 to 1
-                decay = 1 - (progress * 0.7)  # Amplitude decay
+                decay = 1 - (progress * 0.7)  
                 cycle = progress * shakes * 2 * math.pi
                 offset = math.sin(cycle) * intensity * decay
                 
-                # Apply displacement horizontally
                 widget.place(x=original_x + offset, y=original_y)
                 widget.update()
                 
                 widget.after(step_time, lambda: step(count + 1))
             else:
-                # Restore original position
                 widget.place(x=original_x, y=original_y)
                 if callback:
                     callback()
@@ -448,7 +427,6 @@ class TkAnimations:
             duration: Animation duration in milliseconds
             callback: Optional function to call when animation completes
         """
-        # Get the widget's original position
         original_x = widget.winfo_x()
         original_y = widget.winfo_y()
         
@@ -457,36 +435,28 @@ class TkAnimations:
         
         def step_up(count):
             if count <= steps:
-                # Calculate lift using easing function
                 progress = count / steps
-                # Easing function: ease-out cubic
                 ease = 1 - (1 - progress) ** 3
                 offset = hover_lift * ease
                 
-                # Apply vertical displacement
                 widget.place(x=original_x, y=original_y - offset)
                 widget.update()
                 
                 widget.after(step_time, lambda: step_up(count + 1))
             else:
-                # Keep hovering for a moment
                 widget.after(duration, step_down)
         
         def step_down(count=0):
             if count <= steps:
-                # Calculate descent using easing function
                 progress = count / steps
-                # Easing function: ease-in cubic
                 ease = progress ** 3
                 offset = hover_lift * (1 - ease)
                 
-                # Apply vertical displacement
                 widget.place(x=original_x, y=original_y - offset)
                 widget.update()
                 
                 widget.after(step_time, lambda: step_down(count + 1))
             else:
-                # Restore original position
                 widget.place(x=original_x, y=original_y)
                 if callback:
                     callback()
@@ -505,38 +475,30 @@ def demo_app():
     
     animations = TkAnimations()
     
-    # Create a frame for the demo controls
     control_frame = tk.Frame(root, padx=10, pady=10)
     control_frame.pack(side=tk.TOP, fill=tk.X)
     
-    # Create a button frame using pack manager
     button_frame = tk.Frame(control_frame)
     button_frame.pack(side=tk.TOP, fill=tk.X)
     
-    # Create a canvas for animation demonstrations
     canvas = tk.Canvas(root, bg='white', width=750, height=450)
     canvas.pack(pady=20)
     
-    # Create a frame inside the canvas that will be animated
     demo_frame = tk.Frame(canvas, bg='#3498db', width=100, height=100)
     demo_frame.place(x=325, y=175)  # Position within canvas
     
-    # Create a label inside the demo frame
     demo_label = tk.Label(demo_frame, text="Demo", fg="white", bg="#3498db", font=("Arial", 14))
     demo_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
     
-    # Button to reset the demo
     def reset_demo():
         demo_frame.config(bg='#3498db', width=100, height=100)
         demo_label.config(text="Demo", fg="white", bg="#3498db")
         demo_frame.place(x=325, y=175)
         status_label.config(text="Demo ready")
     
-    # Status label
     status_label = tk.Label(control_frame, text="Select an animation to demo", font=("Arial", 10))
     status_label.pack(side=tk.BOTTOM, pady=5)
     
-    # Create buttons for each animation
     animations_list = [
         ("Fade In", lambda: animations.animate_fade_in(demo_frame, callback=lambda: status_label.config(text="Fade In completed"))),
         ("Fade Out", lambda: animations.animate_fade_out(demo_frame, callback=lambda: status_label.config(text="Fade Out completed"))),
@@ -551,9 +513,7 @@ def demo_app():
         ("Reset", reset_demo)
     ]
     
-    # Create buttons using pack instead of grid
     for i, (label, command) in enumerate(animations_list):
-        # Create a new frame for each "row" of buttons (5 per row)
         if i % 5 == 0:
             row_frame = tk.Frame(button_frame)
             row_frame.pack(side=tk.TOP, fill=tk.X, pady=2)
@@ -561,7 +521,6 @@ def demo_app():
         btn = tk.Button(row_frame, text=label, command=command, width=12)
         btn.pack(side=tk.LEFT, padx=5, pady=5)
     
-    # Label with instructions
     instructions = tk.Label(root, text="Click a button to see the animation in action", font=("Arial", 12))
     instructions.pack(side=tk.BOTTOM, pady=10)
     
