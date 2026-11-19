@@ -1,161 +1,71 @@
-# TkAnimations
+# TkAnimator
 
-⚠️ **WARNING**: This library is still under development and may contain bugs.  
-If you encounter any issues, please report them. Contributions are welcome!
+TkAnimator is a dependency-free animation engine for Tkinter. It uses a monotonic clock and Tk `after()` scheduling so widget updates run on the event-loop thread. The project keeps the original `TkAnimations` API while adding a typed package API.
 
-**TkAnimations** is a collection of reusable animation effects for Tkinter widgets, designed to bring life and motion to your desktop apps all from a single, lightweight Python file.
+## Install
 
-## Features
-
-- Fade in/out effects  
-- Slide animations in all directions  
-- Bouncing effects  
-- Pulsing effects  
-- Wiggle effects  
-- Color transitions  
-- Expand/shrink animations  
-- Shake effects  
-- Hover animations  
-
-## Installation
-
-Simply copy the `tk_animations.py` file into your project folder.
--or `pip install tk-animations`
-
-## Basic Usage
-
-```python
-from tkinter import *
-from tk_animations import TkAnimations
-
-root = Tk()
-animations = TkAnimations()
-
-# Apply to any widget
-button = Button(root, text="Click me")
-button.pack()
-
-animations.animate_fade_in(button)
+```bash
+python -m pip install .
 ```
 
-## Complete Method Reference
+For development: `python -m pip install -e ".[dev]"`. Python 3.10+ is supported. Tkinter must be available in your Python installation.
 
-### Fade Effects
+Optional Canvas image rotation needs Pillow: `python -m pip install "tk-animator[images]"`.
 
-```python
-animate_fade_in(
-    widget: tk.Widget, 
-    duration: int = 1000, 
-    callback: Optional[Callable] = None
-)
-
-animate_fade_out(
-    widget: tk.Widget, 
-    duration: int = 1000, 
-    callback: Optional[Callable] = None
-)
-```
-
-### Movement Animations
+## Quick start
 
 ```python
-animate_slide(
-    widget: tk.Widget, 
-    direction: str = 'right',  # 'left'/'right'/'up'/'down'
-    distance: int = 100,
-    duration: int = 1000,
-    callback: Optional[Callable] = None
-)
+import tkinter as tk
+from tkanimator import Animator, Easing
 
-animate_bounce(
-    widget: tk.Widget,
-    height: int = 30,  # Max bounce height
-    bounces: int = 3,
-    duration: int = 1500,
-    callback: Optional[Callable] = None
-)
-
-animate_hover(
-    widget: tk.Widget,
-    hover_lift: int = 10,  # Lift distance
-    duration: int = 300,
-    callback: Optional[Callable] = None
-)
+root = tk.Tk()
+button = tk.Button(root, text="Animate me")
+button.place(x=20, y=50)
+animator = Animator(button)
+animator.move(x=300, y=50, duration=1000, easing=Easing.EASE_IN_OUT_CUBIC).start()
+root.mainloop()
 ```
 
-### Transformation Effects
+`Animation.start()` returns immediately. Keep a handle to pause/resume/cancel/restart it. Durations and delays are milliseconds; `repeat` is the number of additional cycles (`-1` means infinite), and `yoyo=True` reverses every other cycle. `speed=2` doubles playback speed. Built-in property animations replace a running animation on the same target property; pass `conflict="allow"` to opt into concurrent writes.
+
+## Effects
 
 ```python
-animate_pulse(
-    widget: tk.Widget,
-    scale_factor: float = 1.2,  # Max scale
-    pulses: int = 3,
-    duration: int = 1000,
-    callback: Optional[Callable] = None
-)
+from tkanimator.animations import slide, shake, bounce, pulse, color_transition, follow_path, scroll
+from tkanimator.adapters.canvas import move_item, rotate_image
 
-animate_wiggle(
-    widget: tk.Widget,
-    angle: float = 10.0,  # Max rotation
-    wiggles: int = 5,
-    duration: int = 1000,
-    callback: Optional[Callable] = None
-)
-
-animate_expand_shrink(
-    widget: tk.Widget,
-    expand_factor: float = 1.5,
-    duration: int = 1000,
-    shrink_back: bool = True,  # Return to original size
-    callback: Optional[Callable] = None
-)
+handle = slide(button, "left", 120, duration=500).start()
+handle.pause()
+handle.resume()
+handle.cancel()
 ```
 
-### Visual Effects
+Canvas items can be animated with `move_item(canvas, item, x, y)` and Canvas viewports with `scroll(canvas, target=.5, axis="y")`. `follow_path(widget, [(x1, y1), ...])` uses distance-weighted polyline motion. `rotate_image` uses Pillow and rotates a Canvas image item; retain your `PhotoImage` reference.
 
-```python
-animate_color_transition(
-    widget: tk.Widget,
-    start_color: str = '#FFFFFF',
-    end_color: str = '#3498db',
-    duration: int = 1000,
-    property_name: str = 'bg',  # 'fg' for text color
-    callback: Optional[Callable] = None
-)
+Geometry effects (`move`, `slide`, `follow_path`, `shake`, `bounce`, `pulse`, `expand_shrink`) require `place()` because Tk's `pack` and `grid` own layout. Color transitions update a named Tk option such as `bg` or `fg`. Arbitrary widget rotation and per-widget opacity are not supported by Tk; `fade_toplevel` is provided for whole-window alpha on platforms that support it. Use a Canvas image item for transforms.
 
-animate_shake(
-    widget: tk.Widget,
-    intensity: int = 10,  # Shake strength
-    shakes: int = 5,
-    duration: int = 800,
-    callback: Optional[Callable] = None
-)
-```
+`Sequence([a, b])` plays handles serially; `Parallel([a, b])` starts them together. `Timeline(widget).add(animation, at_ms=250)` schedules multiple handles from one start. `stagger(handles, delay_ms)` returns a sequential group with each handle offset by the requested delay.
 
-## Demo Application
+## Easing reference
 
-The library includes a ready-to-run demo:
+`Easing` includes linear, in/out/in-out quad, cubic, quart, quint, sine, expo, and circ, plus back, elastic, bounce, and spring-inspired out curves. A custom easing can be any callable from progress to eased progress.
 
-```python
-if __name__ == "__main__":
-    demo_app()  # Shows all animations
-```
+## Compatibility and migration
 
-## 📝 Important Notes
+The original `tk_animations.py` module and `TkAnimations.animate_*` methods remain. They now return `Animation` handles (previously they returned `None`). Fade methods work on a root or toplevel only. `animate_wiggle` now raises `ValueError` because ordinary Tk widgets cannot rotate; use `rotate_image` on a Canvas image. Movement and size methods require `place()`. Calls to `update()` were removed, avoiding reentrant event processing.
 
-### Geometry Managers:
-- Works best with `place()` manager for precise control.
+Launch the interactive showcase with `tkanimator-showcase` (or `python -m tkanimator.showcase`). It includes standard widget and Canvas previews, easing and duration controls, a curve visualizer, and playback controls. The original calculator demo remains as `demo.py`; a basic modern example is in `examples/basic.py`.
 
-### Performance:
-- Complex animations may affect performance on older hardware.
-- Alpha effects may not work on all platforms.
+## Architecture
 
-### Duration:
-- All durations are in milliseconds (1000ms = 1s).
+`src/tkanimator/core` contains lifecycle, scheduler, interpolation, easing and timeline primitives. `sequences` composes handles. `animations` contains concrete effects. Tk callbacks are shared per interpreter, use `time.monotonic()`, and stop their pending `after()` callback when idle. Pillow is optional; there are no required runtime dependencies.
 
-### Callbacks:
-- Optional callback functions execute after animation completes.
+See [docs/architecture.md](docs/architecture.md), [docs/animations.md](docs/animations.md), and [CHANGELOG.md](CHANGELOG.md).
+
+## Development
+
+Run `pytest`, `ruff check src tests`, `mypy src/tkanimator`, and `python -m build`. CI runs these checks on Python 3.10. GUI integration needs a display server; math, scheduler, and validation tests do not.
 
 ## License
 
-MIT License Free to use modify and distribute.
+MIT. Original attribution is retained in [LICENSE](LICENSE).

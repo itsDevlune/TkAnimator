@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tk-animator"
+version = "2.0.0"
+description = "Event-loop-safe animation primitives for Tkinter"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "itsDevLune"}]
+classifiers = ["Programming Language :: Python :: 3", "Topic :: Software Development :: User Interfaces"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5", "mypy>=1.10", "build>=1.2"]
+images = ["Pillow>=10"]
+
+[project.scripts]
+tkanimator-showcase = "tkanimator.showcase:main"
+
+[project.urls]
+Homepage = "https://github.com/itsDevlune/TkAnimator"
+Repository = "https://github.com/itsDevlune/TkAnimator"
+Issues = "https://github.com/itsDevlune/TkAnimator/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["tk_animations"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["tkanimator*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
